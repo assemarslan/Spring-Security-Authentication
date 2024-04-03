@@ -1,6 +1,6 @@
 package com.assem.SpringSecurityJWT.service;
 
-import com.assem.SpringSecurityJWT.dto.ReqRes;
+import com.assem.SpringSecurityJWT.dto.*;
 import com.assem.SpringSecurityJWT.entity.OurUsers;
 import com.assem.SpringSecurityJWT.repository.OurUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,8 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public ResponseEntity<ReqRes> signUp(ReqRes registrationRequest){
-        ReqRes resp = new ReqRes();
+    public ResponseEntity<SignupResponse> signUp(SignUpRequest registrationRequest){
+        SignupResponse resp = new SignupResponse();
         try {
             Optional<OurUsers> check=ourUserRepo.findByEmail(registrationRequest.getEmail());
             if (!check.isEmpty()) {
@@ -45,7 +45,6 @@ public class AuthService {
                 resp.setOurUsers(ourUserResult);
                 resp.setMessage("User Saved Successfully");
                 resp.setStatusCode(200);
-
             }
             return ResponseEntity.status(HttpStatus.CREATED).body(resp);
 
@@ -56,8 +55,8 @@ public class AuthService {
         }
     }
 
-    public ReqRes signIn(ReqRes signinRequest){
-        ReqRes response = new ReqRes();
+    public SigninResponse signIn(SignInRequest signinRequest){
+        SigninResponse response = new SigninResponse();
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getEmail(),signinRequest.getPassword()));
@@ -77,8 +76,8 @@ public class AuthService {
         return response;
     }
 
-    public ReqRes refreshToken(ReqRes refreshTokenReqiest){
-        ReqRes response = new ReqRes();
+    public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenReqiest){
+        RefreshTokenResponse response = new RefreshTokenResponse();
         String ourEmail = jwtUtils.extractUsername(refreshTokenReqiest.getToken());
         OurUsers users = ourUserRepo.findByEmail(ourEmail).orElseThrow();
         if (jwtUtils.isTokenValid(refreshTokenReqiest.getToken(), users)) {

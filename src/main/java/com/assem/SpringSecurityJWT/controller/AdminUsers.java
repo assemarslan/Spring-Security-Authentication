@@ -1,5 +1,6 @@
 package com.assem.SpringSecurityJWT.controller;
 
+import com.assem.SpringSecurityJWT.dto.ProductRequest;
 import com.assem.SpringSecurityJWT.dto.ReqRes;
 import com.assem.SpringSecurityJWT.entity.Product;
 import com.assem.SpringSecurityJWT.repository.ProductRepo;
@@ -22,7 +23,7 @@ public class AdminUsers {
     }
 
     @PostMapping("/admin/saveproduct")
-    public ResponseEntity<Object> signUp(@RequestBody ReqRes productRequest){
+    public ResponseEntity<Object> signUp(@RequestBody ProductRequest productRequest){
         Product productToSave = new Product();
         productToSave.setName(productRequest.getName());
         return ResponseEntity.ok(productRepo.save(productToSave));
